@@ -44,7 +44,11 @@ module CsobPaymentGateway
   end
 
   class Configuration
-    attr_accessor :environment, :merchant_id, :return_url, :gateway_url, :public_key, :private_key, :currency, :return_method_post, :close_payment, :keys_directory
+    BASE_ATTRIBUTES = [:gateway_url, :public_key, :currency,
+                       :return_method_post, :close_payment, :keys_directory]
+
+    attr_accessor :environment, :merchant_id, :return_url, :private_key
+    attr_writer   *BASE_ATTRIBUTES
     attr_reader :statuses, :urls
 
     def initialize
@@ -52,6 +56,12 @@ module CsobPaymentGateway
       @base = config['base']
       @statuses = config['statuses']
       @urls = config['urls']
+    end
+
+    BASE_ATTRIBUTES.each do |attribute|
+      define_method attribute do
+        instance_variable_get("@#{attribute}") || base[attribute.to_s]
+      end
     end
 
     def base
