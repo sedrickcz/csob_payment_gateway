@@ -1,7 +1,7 @@
-require "yaml"
+require 'yaml'
 
 module CsobPaymentGateway
-  BASE_PATH = File.expand_path("../../../", __FILE__)
+  BASE_PATH = File.expand_path('../../../', __FILE__)
 
   def self.configure
     yield configuration
@@ -15,47 +15,47 @@ module CsobPaymentGateway
     yaml = YAML.load_file(path)
     return unless yaml
 
-    configuration.merchant_id = yaml["merchant_id"]
-    configuration.gateway_url = yaml["gateway_url"]
-    configuration.return_url = yaml["return_url"]
-    configuration.public_key = yaml["public_key"]
-    configuration.private_key = yaml["private_key"]
-    configuration.currency = yaml["currency"]
-    configuration.return_method_post = yaml["return_method_post"]
-    configuration.close_payment = yaml["close_payment"]
-    configuration.keys_directory = yaml["keys_directory"]
+    configuration.merchant_id = yaml['merchant_id']
+    configuration.gateway_url = yaml['gateway_url']
+    configuration.return_url = yaml['return_url']
+    configuration.public_key = yaml['public_key']
+    configuration.private_key = yaml['private_key']
+    configuration.currency = yaml['currency']
+    configuration.return_method_post = yaml['return_method_post']
+    configuration.close_payment = yaml['close_payment']
+    configuration.keys_directory = yaml['keys_directory']
 
     configuration
   end
 
   def self.configure_from_rails
-   path = ::Rails.root.join("config", "csob.yml")
-     configure_from_yaml(path) if File.exists?(path)
+    path = ::Rails.root.join('config', 'csob.yml')
+    configure_from_yaml(path) if File.exists?(path)
 
-     env = if defined?(::Rails) && ::Rails.respond_to?(:env)
-             ::Rails.env.to_sym
-           elsif defined?(::RAILS_ENV)
-             ::RAILS_ENV.to_sym
-           end
-     configuration.environment ||= (env == :production) ? :production : :test
+    env = if defined?(::Rails) && ::Rails.respond_to?(:env)
+            ::Rails.env.to_sym
+          elsif defined?(::RAILS_ENV)
+            ::RAILS_ENV.to_sym
+          end
+    configuration.environment ||= (env == :production) ? :production : :test
 
-     warn "CSOB Payment Gateway wasnt properly configured." if CsobPaymentGateway.configuration.merchant_id.blank?
-     configuration
-   end
+    warn "CSOB Payment Gateway wasn't properly configured." if CsobPaymentGateway.configuration.merchant_id.blank?
+    configuration
+  end
 
-   class Configuration
+  class Configuration
     attr_accessor :environment, :merchant_id, :return_url, :gateway_url, :public_key, :private_key, :currency, :return_method_post, :close_payment, :keys_directory
     attr_reader :statuses, :urls
 
     def initialize
-      config    = YAML.load_file(File.join(BASE_PATH, "config", "config.yml"))
-      @base     = config["base"]
-      @statuses = config["statuses"]
-      @urls = config["urls"]
+      config = YAML.load_file(File.join(BASE_PATH, 'config', 'config.yml'))
+      @base = config['base']
+      @statuses = config['statuses']
+      @urls = config['urls']
     end
 
     def base
-      env = @environment.nil? ? "test" : @environment.to_s
+      env = @environment.nil? ? 'test' : @environment.to_s
       @base[env]
     end
   end
