@@ -43,7 +43,7 @@ config/csob.yml
 
 ```yml
 close_payment: "true"
-currency: "USD"
+currency: "CZK"
 environment: :test
 gateway_url: "https://iapi.iplatebnibrana.csob.cz/api/v1.7"
 keys_directory: "private/keys"
