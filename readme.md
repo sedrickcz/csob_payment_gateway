@@ -27,7 +27,7 @@ CsobPaymentGateway.configure do |config|
   config.close_payment      = true
   config.currency           = 'CZK'
   config.environment        = Rails.env.production? ? :production : :test
-  config.gateway_url        = "https://iapi.iplatebnibrana.csob.cz/api/v1.5"
+  config.gateway_url        = "https://iapi.iplatebnibrana.csob.cz/api/v1.7"
   config.keys_directory     = "private/keys"
   config.merchant_id        = "M1MIPS0459"
   config.private_key        = "rsa_M1MIPS0459.key"
@@ -43,9 +43,9 @@ config/csob.yml
 
 ```yml
 close_payment: "true"
-currency: "USD"
+currency: "CZK"
 environment: :test
-gateway_url: "https://iapi.iplatebnibrana.csob.cz/api/v1.5"
+gateway_url: "https://iapi.iplatebnibrana.csob.cz/api/v1.7"
 keys_directory: "private/keys"
 merchant_id: "M1MIPS0459"
 private_key: "rsa_M1MIPS0459.key"
@@ -58,13 +58,13 @@ return_url: "http://localhost:3000/orders/process_order"
 
 ```ruby
 payment = CsobPaymentGateway::BasePayment.new(
-  total_price: 6000,
+  total_price: 60_000,
   cart_items:  [
-    { name: 'Tier 1',   quantity: 1, amount: 5000, description: 'Tier 1' },
-    { name: 'Delivery', quantity: 1, amount: 1000, description: 'Delviery' }
+    { name: 'Item 1',   quantity: 1, amount: 50_000, description: 'Item 1' },
+    { name: 'Shipping', quantity: 1, amount: 10_000, description: 'Shipping' }
   ],
   order_id:    1234,
-  description: 'Order from kingdomcomerpg.com - Tier 1 for 5000$',
+  description: 'Order from your-eshop.com - Total price 600 CZK',
   customer_id: 1234
 )
 
