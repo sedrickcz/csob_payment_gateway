@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.authors     = ['Jiří Kratochvíl']
   s.email       = 'me@kratochviljiri.cz'
 
-  s.add_dependency('rest-client', '~> 1.8')
+  s.add_dependency('rest-client', '>= 2.0.2')
 
   s.files       =  `git ls-files`.split("\n")
   s.homepage    = 'http://rubygems.org/gems/csob_payment_gateway'

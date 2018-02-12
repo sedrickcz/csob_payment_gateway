@@ -2,6 +2,11 @@ require 'rest-client'
 
 module CsobPaymentGateway
   class BasePayment
+    attr_reader :merchant_id, :gateway_url, :cart_items, :currency, :order_id,
+                :total_price, :customer_id, :timestamp, :default_currency,
+                :close_payment, :return_url, :description, :logger, :pay_id
+
+    attr_accessor :response
 
     def initialize(attributes = {})
       attributes.each do |key, value|
@@ -9,20 +14,13 @@ module CsobPaymentGateway
       end
 
       @merchant_id ||= CsobPaymentGateway.configuration.merchant_id.to_s
-      @public_key ||= CsobPaymentGateway.configuration.public_key.to_s
-      @private_key ||= CsobPaymentGateway.configuration.private_key.to_s
       @gateway_url ||= CsobPaymentGateway.configuration.gateway_url.to_s
       @return_url ||= CsobPaymentGateway.configuration.return_url.to_s
       @default_currency ||= CsobPaymentGateway.configuration.currency.to_s
       @close_payment ||= CsobPaymentGateway.configuration.close_payment.to_s
-      @keys_directory ||= CsobPaymentGateway.configuration.keys_directory.to_s
 
       @timestamp = Time.now.strftime('%Y%m%d%H%M%S')
     end
-
-    attr_reader :merchant_id, :public_key, :gateway_url, :cart_items, :currency, :order_id, :total_price, :customer_id, :timestamp, :default_currency, :close_payment, :return_url, :description, :keys_directory, :logger, :pay_id
-
-    attr_accessor :response
 
     def payment_init
       api_init_url = CsobPaymentGateway.configuration.urls['init']
@@ -33,7 +31,7 @@ module CsobPaymentGateway
 
     def payment_process_url
       api_process_url = CsobPaymentGateway.configuration.urls['process']
-      CGI.escapeHTML(@gateway_url + api_process_url + get_data)
+      CGI.escapeHTML(gateway_url + api_process_url + get_data)
     end
 
     def payment_status
@@ -74,9 +72,9 @@ module CsobPaymentGateway
 
       text = text + '|' + response['paymentStatus'].to_s if response['paymentStatus'].present?
 
-      text = text + '|' + response['authCode'].to_s if response['authCode'] && response['authCode'].present?
+      text = text + '|' + response['authCode'].to_s if response['authCode'].present?
 
-      text = text + '|' + response['merchantData'].to_s if response['merchantData'] && response['merchantData'].present?
+      text = text + '|' + response['merchantData'].to_s if response['merchantData'].present?
 
       CsobPaymentGateway::Crypt.verify(text, response['signature'])
     end
@@ -130,6 +128,5 @@ module CsobPaymentGateway
       data.merge!(language: 'EN')
       data.merge(signature: CsobPaymentGateway::Crypt.sign(data, 'POST'))
     end
-
   end
 end

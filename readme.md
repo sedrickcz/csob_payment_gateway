@@ -24,16 +24,15 @@ config/initializers/csob.rb
 
 ```ruby
 CsobPaymentGateway.configure do |config|
-  config.close_payment      = true
-  config.currency           = 'CZK'
-  config.environment        = Rails.env.production? ? :production : :test
-  config.gateway_url        = "https://iapi.iplatebnibrana.csob.cz/api/v1.7"
-  config.keys_directory     = "private/keys"
-  config.merchant_id        = "M1MIPS0459"
-  config.private_key        = "rsa_M1MIPS0459.key"
-  config.public_key         = "mips_iplatebnibrana.csob.cz.pub"
-  config.return_method_post = true
-  config.return_url         = "http://localhost:3000/orders/process_order"
+  config.close_payment        = true
+  config.currency             = 'CZK'
+  config.merchant_id          = "M1MIPS0459"
+  # config.environment        = Rails.env.production? ? :production : :test
+  # config.keys_directory     = "private/keys"
+  # config.private_key        = "rsa_M1MIPS0459.key"
+  config.private_key          = "-----BEGIN RSA PRIVATE.........."
+  # config.return_method_post = true
+  # config.return_url         = "http://localhost:3000/orders/process_order"
 end
 ```
 
